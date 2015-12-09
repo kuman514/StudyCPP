@@ -3,6 +3,25 @@
 #define YES 1
 #define NO 0
 
+// "g++ -std=c++11 StackCPP.cpp"
+
+/*
+   My Stack
+
+   -------head-------
+           :
+     curr -> higher
+
+        [curr] <-----(Current Node)
+
+     curr -> lower
+           :
+   ------bottom------
+
+   Actually, it was so confusing to use the default [tail -> prev] as the top data.
+   Therefore, I decided to use some words related to altitude. (such as higher, lower, and bottom)
+*/
+
 struct Node
 {
     Node *higher;
@@ -13,17 +32,16 @@ struct Node
 class Stack
 {
     public:
-        Stack();
-        ~Stack();
-        void push(int num);
-        void pop();
-        int top();
-        bool isEmpty();
-        int checkSize();
+        Stack();                        // Make a new stack
+        ~Stack();                       // Remove a stack
+        void push(int num);             // Push a datum into [head -> lower]
+        void pop();                     // Pop a datum at [head -> lower]
+        int top();                      // I decided to show the [data] of Node [head -> lower], because that is the highest node.
+        bool isEmpty();                 // Shows whether this stack is an empty stack list
+        int checkSize();                // Shows the size of the stack list
     private:
-        Node *head;
+        Node *head;  
         Node *bottom;
-        Node *curr;
         int size;
 };
 
