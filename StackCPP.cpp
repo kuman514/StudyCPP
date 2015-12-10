@@ -39,6 +39,7 @@ class Stack
         int top();                      // I decided to show the [data] of Node [head -> lower], because that is the highest node.
         bool isEmpty();                 // Shows whether this stack is an empty stack list
         int checkSize();                // Shows the size of the stack list
+        void clear();
     private:
         Node *head;  
         Node *bottom;
@@ -56,7 +57,6 @@ Stack::Stack()
     bottom -> higher = head;
     bottom -> lower = bottom;
     
-    curr = nullptr;
     size = 0;
 }
 
@@ -84,7 +84,7 @@ int main(void)
     
     while(cinput != 'q')
     {
-        std::cout << "[p]ush, p[o]p, [t]op, [c]heckSize, [e]mpty?, [q]uit" << std::endl;
+        std::cout << "[p]ush, p[o]p, [t]op, [c]heckSize, c[l]ear, [e]mpty?, [q]uit" << std::endl;
         std::cout << "order : ";
         std::cin >> cinput;
 
@@ -103,6 +103,9 @@ int main(void)
                 break;
             case 'c':
                 std::cout << "Stack Size : " << stack.checkSize() << std::endl;
+                break;
+            case 'l':
+                stack.clear();
                 break;
             case 'e':
                 std::cout << "Is the stack EMPTY? : " << (stack.isEmpty() ? "Yes" : "No") << std::endl;
@@ -172,4 +175,21 @@ int Stack::top()
 int Stack::checkSize()
 {
     return size;
+}
+
+void Stack::clear()
+{
+    Node *tmp = head -> lower;
+    
+    while(tmp != bottom)
+    {
+        tmp -> data = 0;
+        delete tmp;
+        tmp = tmp -> lower;
+    }
+
+    head -> lower = bottom;
+    bottom -> higher = head;
+
+    size = 0;
 }
