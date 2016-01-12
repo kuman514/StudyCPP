@@ -131,6 +131,7 @@ void DLLEI::remove(const char *search)
 
 void DLLEI::sort(int (*compare)(Node *, Node *))
 {
+	// Uses Bubble Sort
 	Node *itmp, *jtmp, *chtmp;
 
 	itmp = top -> next;
@@ -139,6 +140,18 @@ void DLLEI::sort(int (*compare)(Node *, Node *))
 		jtmp = bottom -> prev;
 		while((jtmp != itmp) && (itmp -> prev != jtmp))
 		{
+			/*
+				If the position of itmp and jtmp is...
+				---[itmp == jtmp]--- OR ---[jtmp]---[itmp]---,
+				itmp goes to its next node.
+
+				As jtmp is exchanged...
+				from ---[   ]---[jtmp -> prev]---[jtmp]---
+				into ---[   ]---[jtmp]---[jtmp -> prev]---
+				(the same as current ---[jtmp -> prev]---[jtmp]---[FORMER jtmp -> prev]---),
+				we don't need to set jtmp = jtmp -> prev if jtmp exchange occurs.
+			*/
+
 			if(compare(jtmp -> prev, jtmp) > 0)
 				nodeExchange(jtmp -> prev, jtmp);
 			else
