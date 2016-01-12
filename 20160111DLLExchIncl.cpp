@@ -87,6 +87,8 @@ void DLLEI::insert(int num, const char *name)
 
 	bottom -> prev -> next = tmp;
 	bottom -> prev = tmp;
+
+	std::cout << "Inserted : " << tmp -> name << ", " << tmp -> num << std::endl;
 }
 
 void DLLEI::search(const char *search)
@@ -110,7 +112,7 @@ void DLLEI::remove(const char *search)
 	{
 		if(strcmp(search, tmp -> name) == 0)
 		{
-			std::cout << "Remove : " << tmp -> name << ", " << tmp -> num << std::endl;
+			std::cout << "Remove : " << tmp -> name << ' ' << tmp -> num << std::endl;
 			tmp -> num = 0;
 			strcpy(tmp -> name, "");
 			delete tmp -> name;
@@ -129,8 +131,22 @@ void DLLEI::remove(const char *search)
 
 void DLLEI::sort(int (*compare)(Node *, Node *))
 {
-	Node *itmp, *jtmp;
-	compare = cmp;
+	Node *itmp, *jtmp, *chtmp;
+
+	itmp = top -> next;
+	while(itmp != bottom)
+	{
+		jtmp = bottom -> prev;
+		while((jtmp != itmp) && (itmp -> prev != jtmp))
+		{
+			if(compare(jtmp -> prev, jtmp) > 0)
+				nodeExchange(jtmp -> prev, jtmp);
+			else
+				jtmp = jtmp -> prev;
+		}
+
+		itmp = itmp -> next;
+	}
 }
 
 int main(void)
@@ -141,6 +157,7 @@ int main(void)
 
 	List.insert(514, "koishi");
 	List.insert(210, "nitori");
+	List.sort(cmp);
 	List.isEmpty();
 	List.show();
 
@@ -160,5 +177,6 @@ int main(void)
 
 int cmp(Node *n1, Node *n2)
 {
+	std::cout << "Comparing : " << n1 -> name << ' ' << n1 -> num << ", " << n2 -> name << ' ' << n2 -> num << std::endl;
 	return (n1 -> num) - (n2 -> num);
 }
