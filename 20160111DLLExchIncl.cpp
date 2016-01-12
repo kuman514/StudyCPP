@@ -30,6 +30,7 @@ class DLLEI				// Double Linked List Exchange Included
 				n2 -> next -> prev = n1;
 				n2 -> next = n1;
 			}
+			/*
 			else						// if ...]-[n2]-[n1]-[...
 			{
 				n1 -> prev = n2 -> prev;
@@ -40,6 +41,7 @@ class DLLEI				// Double Linked List Exchange Included
 				n1 -> next -> prev = n2;
 				n1 -> next = n2;
 			}
+			*/
 		}
 	public:
 		void init(void)
@@ -158,38 +160,71 @@ void DLLEI::sort(int (*compare)(Node *, Node *))
 				jtmp = jtmp -> prev;
 		}
 
-		itmp = itmp -> next;
+		if(itmp -> prev != jtmp)
+			itmp = itmp -> next;
+		/*
+		   if itmp is ---[jtmp]---[itmp]--- (itmp -> prev == jtmp),
+		   we don't need to set itmp = itmp -> next
+		*/
 	}
 }
 
 int main(void)
 {
 	DLLEI List;
+	char cinput;
+	int iinput;
+	char sinput[20];
+
 	List.init();
-	List.isEmpty();
 
-	List.insert(514, "koishi");
-	List.insert(210, "nitori");
-	List.sort(cmp);
-	List.isEmpty();
-	List.show();
+	std::cout << "Double Linked List ~Node Exchange Included Edition~" << std::endl;
+	while(cinput != 'E')
+	{
+		std::cout << "[i]nsert // [r]emove // [s]earch // S[o]rt // S[h]ow List // Is [e]mpty? // [E]xit" << std::endl;
+		std::cout << "Input : ";
+		std::cin >> cinput;
 
-	List.remove("koishi");
-	List.isEmpty();
-	List.show();
-
-	List.remove("koishi");
-	List.remove("nitori");
-	List.isEmpty();
-	//char cinput;
-	//int iinput;
-	//char sinput[20];
-
+		switch(cinput)
+		{
+			case 'i':
+				std::cout << "New name : ";
+				std::cin >> sinput;
+				std::cout << "New num : ";
+				std::cin >> iinput;
+				List.insert(iinput, sinput);
+				break;
+			case 'r':
+				std::cout << "Name to remove : ";
+				std::cin >> sinput;
+				List.remove(sinput);
+				break;
+			case 's':
+				std::cout << "Search : ";
+				std::cin >> sinput;
+				List.search(sinput);
+				break;
+			case 'o':
+				List.sort(cmp);
+				break;
+			case 'h':
+				List.show();
+				break;
+			case 'e':
+				List.isEmpty();
+				break;
+			case 'E':
+				break;
+			default:
+				std::cout << "Input error. Try again." << std::endl;
+				break;
+		}
+	}
 	return 0;
 }
 
 int cmp(Node *n1, Node *n2)
 {
-	std::cout << "Comparing : " << n1 -> name << ' ' << n1 -> num << ", " << n2 -> name << ' ' << n2 -> num << std::endl;
+	//std::cout << "Comparing : " << n1 -> name << ' ' << n1 -> num << ", " << n2 -> name << ' ' << n2 -> num << std::endl;
 	return (n1 -> num) - (n2 -> num);
 }
