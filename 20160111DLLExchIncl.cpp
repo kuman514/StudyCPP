@@ -18,9 +18,9 @@ class DLLEI				// Double Linked List Exchange Included
 	private:
 		Node *top;
 		Node *bottom;
-		void nodeExchange(Node *n1, Node *n2)
+		void nodeExchange(Node* n1, Node* n2)
 		{
-			if(n1 -> next == n2)		// if ...]-[n1]-[n2]-[...
+			if(n1 -> next == n2)
 			{
 				n2 -> prev = n1 -> prev;
 				n1 -> prev -> next = n2;
@@ -30,18 +30,6 @@ class DLLEI				// Double Linked List Exchange Included
 				n2 -> next -> prev = n1;
 				n2 -> next = n1;
 			}
-			/*
-			else						// if ...]-[n2]-[n1]-[...
-			{
-				n1 -> prev = n2 -> prev;
-				n2 -> prev -> next = n1;
-
-				n2 -> prev = n1;
-				n2 -> next = n1 -> next;
-				n1 -> next -> prev = n2;
-				n1 -> next = n2;
-			}
-			*/
 		}
 	public:
 		void init(void)
