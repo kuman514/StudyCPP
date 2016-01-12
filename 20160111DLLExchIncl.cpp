@@ -32,7 +32,7 @@ class DLLEI				// Double Linked List Exchange Included
 			}
 		}
 	public:
-		void init(void)
+		DLLEI()
 		{
 			top = new Node;
 			bottom = new Node;
@@ -42,6 +42,25 @@ class DLLEI				// Double Linked List Exchange Included
 	
 			bottom -> prev = top;
 			bottom -> next = bottom;
+		}
+		~DLLEI()
+		{
+			Node *tmp = top -> next;
+			while(tmp != bottom)
+			{
+				std::cout << "Remove : " << tmp -> name << ' ' << tmp -> num << std::endl;
+				tmp -> num = 0;
+				strcpy(tmp -> name, "");
+				delete tmp -> name;
+				top -> next = tmp -> next;
+				tmp -> next -> prev = top;
+
+				delete tmp;
+				tmp = top -> next;
+			}
+
+			delete top;
+			delete bottom;
 		}
 		void insert(int num, const char *name);
 		void search(const char *search);
@@ -163,8 +182,6 @@ int main(void)
 	char cinput;
 	int iinput;
 	char sinput[20];
-
-	List.init();
 
 	std::cout << "Double Linked List ~Node Exchange Included Edition~" << std::endl;
 	while(cinput != 'E')
