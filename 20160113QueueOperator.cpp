@@ -39,7 +39,32 @@ struct Op_Queue
 	public:
 		void readi(char* &cur) { stack.addInt(stoi(cur)); }
 		void reado(char* &cur) { stack.addOp(stoop(cur)); }
-		void opsort()
+		void opSort()
+		{
+			int count = 0;
+
+			for(int i = 0; i < stack.opcount; i++)
+			{
+				if((stack.operators[i] == '*') || (stack.operators[i] == '/'))
+				{
+					opseq[count] = stack.operators[i];
+					count++;
+				}
+			}
+
+			for(int i = 0; i < stack.opcount; i++)
+			{
+				if((stack.operators[i] == '+') || (stack.operators[i] == '-'))
+				{
+					opseq[count] = stack.operators[i];
+					count++;
+				}
+			}
+		}
+		void printSeq(void)
+		{
+		}
+		void printSeqRev(void)
 		{
 		}
 };
@@ -85,7 +110,12 @@ char stoop(char* &input)
 
 int main(void)
 {
-	char input[100] = {"1+2*3"};		// should print "300 40 * 170 514 / -" and "- * 300 40 / 170 514"
+	// 1+2*3 -> "1 2 3 * +" and "+ 1 * 2 3"
+	// 1*2+3 -> "1 2 * 3 +" and "+ * 1 2 3"
+	// 1+2*3-4 -> "1 2 3 * + 4 -" and "- + 1 * 2 3 4"
+	// 1-2+3*4 -> "1 2 - 3 4 * +" and "+ - 1 2 * 3 4"
+
+	char input[100] = {"1+2*3-4"};		// should print "123*+" and "+1*23"
 	char *cur = input;
 	Op_Queue queue;
 
@@ -95,6 +125,10 @@ int main(void)
 	cur = input;
 	while(*cur != '\0')
 		queue.reado(cur);
+
+	queue.opSort();
+	queue.printSeq();
+	queue.printSeqRev();
 
 	return 0;
 }
