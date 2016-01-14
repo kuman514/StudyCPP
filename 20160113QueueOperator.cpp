@@ -1,5 +1,8 @@
 #include <iostream>
 
+int stoi(char* &);
+char stoop(char* &);
+
 struct Stack
 {
 	int integers[10];
@@ -10,12 +13,18 @@ struct Stack
 	Stack() : icount(0), opcount(0) {}
 	void addInt(int num)
 	{
+		if(num == -1)
+			return;
+
 		integers[icount] = num;
 		std::cout << integers[icount] << std::endl;
 		icount++;
 	}
 	void addOp(char op)
 	{
+		if(op == -1)
+			return;
+
 		operators[opcount] = op;
 		std::cout << operators[opcount] << std::endl;
 		opcount++;
@@ -28,8 +37,8 @@ struct Op_Queue
 		Stack stack;
 		char opseq[10];
 	public:
-		void testi(int a) { stack.addInt(a); }
-		void testo(char b) { stack.addOp(b); }
+		void readi(char* &cur) { stack.addInt(stoi(cur)); }
+		void reado(char* &cur) { stack.addOp(stoop(cur)); }
 		void opsort()
 		{
 		}
@@ -43,7 +52,7 @@ int stoi(char* &input)
 	{
 		input++;
 		if(*input == '\0')
-			break;
+			return -1;
 	}
 
 	while('0' <= *input && *input <= '9')
@@ -65,7 +74,7 @@ char stoop(char* &input)
 	{
 		input++;
 		if(*input == '\0')
-			break;
+			return -1;
 	}
 
 	result = *input;
@@ -76,24 +85,16 @@ char stoop(char* &input)
 
 int main(void)
 {
-	char input[100] = {" 300 - 40 * 170 / 514 +"};
+	char input[100] = {"1+2*3"};		// should print "300 40 * 170 514 / -" and "- * 300 40 / 170 514"
 	char *cur = input;
-	int a;
-	char b;
 	Op_Queue queue;
 
 	while(*cur != '\0')
-	{
-		a = stoi(cur);
-		queue.testi(a);
-	}
+		queue.readi(cur);
 
 	cur = input;
 	while(*cur != '\0')
-	{
-		b = stoop(cur);
-		queue.testo(b);
-	}
+		queue.reado(cur);
 
 	return 0;
 }
