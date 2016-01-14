@@ -6,7 +6,7 @@ char stoop(char* &);
 struct Stack
 {
 	int integers[10];
-	char operators[10];
+	char operators[9];
 	int icount;
 	int opcount;
 
@@ -35,35 +35,41 @@ struct Op_Queue
 {
 	private:
 		Stack stack;
-		char opseq[10];
 	public:
 		void readi(char* &cur) { stack.addInt(stoi(cur)); }
 		void reado(char* &cur) { stack.addOp(stoop(cur)); }
-		void opSort()
-		{
-			int count = 0;
-
-			for(int i = 0; i < stack.opcount; i++)
-			{
-				if((stack.operators[i] == '*') || (stack.operators[i] == '/'))
-				{
-					opseq[count] = stack.operators[i];
-					count++;
-				}
-			}
-
-			for(int i = 0; i < stack.opcount; i++)
-			{
-				if((stack.operators[i] == '+') || (stack.operators[i] == '-'))
-				{
-					opseq[count] = stack.operators[i];
-					count++;
-				}
-			}
-		}
+		
 		void printSeq(void)
 		{
+			int i, j = 0, p;
+
+			std::cout << stack.integers[0] << ' ';
+			for(i = 1; i < stack.icount; i++, j++)
+			{
+				std::cout << stack.integers[i] << ' ';
+
+				if((stack.operators[j] == '+') || (stack.operators[j] == '-'))
+				{
+					if((stack.operators[j + 1] == '+') || (stack.operators[j + 1] == '-'))
+						std::cout << stack.operators[j] << ' ';
+					else
+						p = j;
+				}
+				else if((stack.operators[j] == '*') || (stack.operators[j] == '/'))
+				{
+					std::cout << stack.operators[j] << ' ';
+					
+					if((stack.operators[j + 1] == '+') || (stack.operators[j + 1] == '-'))
+						std::cout << stack.operators[p] << ' ';
+				}
+			}
+
+			j++;
+			if((stack.operators[j] == '+') || (stack.operators[j] == '-'))
+				std::cout << stack.operators[j];
+			std::cout << std::endl;
 		}
+		
 		void printSeqRev(void)
 		{
 		}
@@ -113,9 +119,10 @@ int main(void)
 	// 1+2*3 -> "1 2 3 * +" and "+ 1 * 2 3"
 	// 1*2+3 -> "1 2 * 3 +" and "+ * 1 2 3"
 	// 1+2*3-4 -> "1 2 3 * + 4 -" and "- + 1 * 2 3 4"
-	// 1-2+3*4 -> "1 2 - 3 4 * +" and "+ - 1 2 * 3 4"
+	// 1-2*3-4 -> "1 2 3 * - 4 -" and "- - 1 * 2 3 4"
+	// 1*2-3/4 -> "1 2 * 3 4 / -" and "- * 1 2 / 3 4"
 
-	char input[100] = {"1+2*3-4"};		// should print "123*+" and "+1*23"
+	char input[100] = {"1 + 2 - 3 * 4 * 5 /6 + 7-8"};
 	char *cur = input;
 	Op_Queue queue;
 
@@ -126,9 +133,7 @@ int main(void)
 	while(*cur != '\0')
 		queue.reado(cur);
 
-	queue.opSort();
 	queue.printSeq();
-	queue.printSeqRev();
-
 	return 0;
+
 }
