@@ -53,11 +53,14 @@ int stoi(char* &input)
 		if(!('0' <= *input && *input <= '9'))
 			break;
 	}
+
 	return result;
 }
 
 char stoop(char* &input)
 {
+	char result;
+
 	while((*input != '+') && (*input != '-') && (*input != '*') && (*input != '/'))
 	{
 		input++;
@@ -65,7 +68,10 @@ char stoop(char* &input)
 			break;
 	}
 
-	return *input;
+	result = *input;
+	input++;
+
+	return result;
 }
 
 int main(void)
@@ -80,6 +86,11 @@ int main(void)
 	{
 		a = stoi(cur);
 		queue.testi(a);
+	}
+
+	cur = input;
+	while(*cur != '\0')
+	{
 		b = stoop(cur);
 		queue.testo(b);
 	}
