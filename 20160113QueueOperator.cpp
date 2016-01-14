@@ -29,6 +29,8 @@ struct Stack
 		operators[opcount] = op;
 		//std::cout << operators[opcount] << std::endl;
 		opcount++;
+
+		operators[opcount] = -1;
 	}
 };
 
@@ -79,7 +81,7 @@ struct Op_Queue
 		
 		void printSeqRev(void)
 		{
-			int i, j, md = 0;
+			int i, md = 0;
 
 			// 1+2-3/4*5*6+7*8 -> "+ - + 1 2 * * / 3 4 5 6 * 7 8"
 			// 1*2/3+4-5/6-7*8 -> "- - + / * 1 2 3 4 / 5 6 * 7 8"
@@ -89,21 +91,28 @@ struct Op_Queue
 					std::cout << stack.operators[i] << ' ';
 			}
 
-			for(i = 0, j = 0; i < stack.icount; i++)
+			i = 0;
+			while(i < stack.icount)
 			{
-				if((stack.operators[j] == '*') || (stack.operators[j] == '/'))
+				if((stack.operators[i] == '*') || (stack.operators[i] == '/'))
 				{
-					md = j;
-					while((stack.operators[j] != '+') && (stack.operators[j] != '-'))
-						j++;
+					md = i;
+					while((stack.operators[i] != '+') && (stack.operators[i] != '-'))
+					{
+						if(stack.operators[i] == -1)
+							break;
 
-					for(int k = j - 1; k >= md; k--)
+						i++;
+					}
+
+					for(int k = i - 1; k >= md; k--)
 						std::cout << stack.operators[k] << ' ';
+
+					i--;
 				}
-				else
-					j++;
 				
 				std::cout << stack.integers[i] << ' ';
+				i++;
 			}
 
 			std::cout << std::endl;
