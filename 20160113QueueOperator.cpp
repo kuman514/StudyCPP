@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdio>
 
 int stoi(char* &);
 char stoop(char* &);
@@ -42,6 +43,7 @@ struct Op_Queue
 		void printSeq(void)
 		{
 			int i, j = 0, p = -1;
+			// i for integers, j for operators, p for location of +- operators.
 
 			std::cout << stack.integers[0] << ' ';
 			for(i = 1; i < stack.icount; i++, j++)
@@ -77,6 +79,34 @@ struct Op_Queue
 		
 		void printSeqRev(void)
 		{
+			int i, j, md = 0;
+
+			// 1+2-3/4*5*6+7*8 -> "+ - + 1 2 * * / 3 4 5 6 * 7 8"
+			// 1*2/3+4-5/6-7*8 -> "- - + / * 1 2 3 4 / 5 6 * 7 8"
+			for(i = stack.opcount - 1; i >= 0; i--)
+			{
+				if((stack.operators[i] == '+') || (stack.operators[i] == '-'))
+					std::cout << stack.operators[i] << ' ';
+			}
+
+			for(i = 0, j = 0; i < stack.icount; i++)
+			{
+				if((stack.operators[j] == '*') || (stack.operators[j] == '/'))
+				{
+					md = j;
+					while((stack.operators[j] != '+') && (stack.operators[j] != '-'))
+						j++;
+
+					for(int k = j - 1; k >= md; k--)
+						std::cout << stack.operators[k] << ' ';
+				}
+				else
+					j++;
+				
+				std::cout << stack.integers[i] << ' ';
+			}
+
+			std::cout << std::endl;
 		}
 };
 
@@ -127,10 +157,13 @@ int main(void)
 	// 1-2*3-4 -> "1 2 3 * - 4 -" and "- - 1 * 2 3 4"
 	// 1*2-3/4 -> "1 2 * 3 4 / -" and "- * 1 2 / 3 4"
 
-	char input[100] = "1+2*3-4";
-	char *cur = input;
+	char input[100];
+	char *cur;
 	Op_Queue queue;
 
+	scanf("%[^\n]", input);
+	
+	cur = input;
 	while(*cur != '\0')
 		queue.readi(cur);
 
@@ -139,6 +172,7 @@ int main(void)
 		queue.reado(cur);
 
 	queue.printSeq();
+	queue.printSeqRev();
 	return 0;
 
 }
