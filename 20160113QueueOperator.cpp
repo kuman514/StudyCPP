@@ -17,7 +17,7 @@ struct Stack
 			return;
 
 		integers[icount] = num;
-		std::cout << integers[icount] << std::endl;
+		//std::cout << integers[icount] << std::endl;
 		icount++;
 	}
 	void addOp(char op)
@@ -26,7 +26,7 @@ struct Stack
 			return;
 
 		operators[opcount] = op;
-		std::cout << operators[opcount] << std::endl;
+		//std::cout << operators[opcount] << std::endl;
 		opcount++;
 	}
 };
@@ -41,7 +41,7 @@ struct Op_Queue
 		
 		void printSeq(void)
 		{
-			int i, j = 0, p;
+			int i, j = 0, p = -1;
 
 			std::cout << stack.integers[0] << ' ';
 			for(i = 1; i < stack.icount; i++, j++)
@@ -52,6 +52,8 @@ struct Op_Queue
 				{
 					if((stack.operators[j + 1] == '+') || (stack.operators[j + 1] == '-'))
 						std::cout << stack.operators[j] << ' ';
+					else if(j + 1 >= stack.opcount)
+						std::cout << stack.operators[j] << ' ';
 					else
 						p = j;
 				}
@@ -60,13 +62,16 @@ struct Op_Queue
 					std::cout << stack.operators[j] << ' ';
 					
 					if((stack.operators[j + 1] == '+') || (stack.operators[j + 1] == '-'))
+					{
+						if(p != -1)
+							std::cout << stack.operators[p] << ' ';
+						p = -1;
+					}
+					else if(j + 1 >= stack.opcount)
 						std::cout << stack.operators[p] << ' ';
 				}
 			}
 
-			j++;
-			if((stack.operators[j] == '+') || (stack.operators[j] == '-'))
-				std::cout << stack.operators[j];
 			std::cout << std::endl;
 		}
 		
@@ -122,7 +127,7 @@ int main(void)
 	// 1-2*3-4 -> "1 2 3 * - 4 -" and "- - 1 * 2 3 4"
 	// 1*2-3/4 -> "1 2 * 3 4 / -" and "- * 1 2 / 3 4"
 
-	char input[100] = {"1 + 2 - 3 * 4 * 5 /6 + 7-8"};
+	char input[100] = "1+2*3-4";
 	char *cur = input;
 	Op_Queue queue;
 
