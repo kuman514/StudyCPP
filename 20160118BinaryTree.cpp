@@ -40,6 +40,9 @@ struct BiTree
 			// if you want to set link node cur = root,
 			// don't do anything like this : "kuman() : cur(root)"
 			// cur = root should happen after creating root.
+			std::cout << root << ", ";
+			std::cout << "Index : " << root -> index << ", ";
+			std::cout << "Data : " << root -> data << std::endl;
 		}
 		~BiTree()
 		{	
@@ -55,18 +58,19 @@ struct BiTree
 			
 			tmp -> LChild = nullptr;
 			tmp -> RChild = nullptr;
-			tmp -> Parent = cur;
 
 			while(keepGoing)
 			{
 				if(cur -> LChild == nullptr)
 				{
 					cur -> LChild = tmp;
+					tmp -> Parent = cur;
 					keepGoing = 0;
 				}
 				else if(cur -> RChild == nullptr)
 				{
 					cur -> RChild = tmp;
+					tmp -> Parent = cur;
 					keepGoing = 0;
 				}
 				else
@@ -89,8 +93,20 @@ struct BiTree
 				}
 			}
 
-			std::cout << "Index : " << tmp -> index << ", " << "Node Data : " << tmp -> data << std::endl;
+			std::cout << tmp << ", ";
+			std::cout << "Index : " << tmp -> index << ", ";
+			std::cout << "Data : " << tmp -> data << ", ";
+			std::cout << "Parent : " << tmp -> Parent << std::endl;
 			nowIndex++;
+		}
+		void search(unsigned int searchIndex)
+		{
+			Node *search = root;
+
+			// Will be added
+			while(search -> index != searchIndex)
+			{
+			}
 		}
 		void show(void)
 		{
@@ -103,6 +119,14 @@ int main(void)
 	BiTree bt(1);
 	bt.insert(2);
 	bt.insert(3);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
 	bt.insert(4);
 	return 0;
 }
