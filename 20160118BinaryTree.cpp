@@ -62,32 +62,47 @@ struct BiTree
 			{
 				if(cur -> LChild == nullptr)
 				{
+					// If the current node has no left leaf 
 					cur -> LChild = tmp;
 					tmp -> Parent = cur;
 					keepGoing = 0;
 				}
 				else if(cur -> RChild == nullptr)
 				{
+					// if the current node has no right leaf
 					cur -> RChild = tmp;
 					tmp -> Parent = cur;
 					keepGoing = 0;
 				}
 				else
 				{
+					// if the current node has both two leaves...
+
 					if(cur -> index == twoPower(cur -> index) - 1)
 					{
+						// that means, if the current node is on the very right side
 						while(cur != root)
 							cur = cur -> Parent;
 
 						while(cur -> LChild != nullptr && cur -> RChild != nullptr)
 							cur = cur -> LChild;
+						// go to root and then go to the very left leaf
 					}
 					else if(cur == cur -> Parent -> LChild)
+					{
 						cur = cur -> Parent -> RChild;
+						// if the current node has two leaves and it is the left child node of its parent,
+						// go to the sibling leaf
+					}
 					else if(cur == cur -> Parent -> RChild)
 					{
-						cur = cur -> Parent -> Parent;
-						cur = cur -> RChild -> LChild;
+						while(cur != cur -> Parent -> LChild)
+							cur = cur -> Parent;
+
+						cur = cur -> Parent -> RChild;
+						
+						while(cur -> LChild != nullptr && cur -> RChild != nullptr)
+							cur = cur -> LChild;
 					}
 				}
 			}
@@ -144,11 +159,10 @@ struct BiTree
 			{
 				if(show -> LChild != nullptr)
 					show = show -> LChild;
-				if(show -> RChild != nullptr)
+				else if(show -> RChild != nullptr)
 					show = show -> RChild;
 				else if(show == show -> Parent -> RChild)
 				{
-					std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
 					while(show != show -> Parent -> LChild)
 					{
 						show = show -> Parent;
@@ -156,10 +170,13 @@ struct BiTree
 							break;
 					}
 
-					show = show -> Parent -> RChild;
+					show = show -> Parent;
+					std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
+					show = show -> RChild;
 				}
 				else
 				{
+					std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
 					while(show -> RChild == nullptr)
 					{
 						show = show -> Parent;
@@ -221,6 +238,12 @@ int main(void)
 	bt.insert(4);
 	bt.insert(4);
 	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
+	bt.insert(4);
 	bt.insert(3);
 	bt.insert(3);
 	bt.insert(3);
@@ -235,8 +258,8 @@ int main(void)
 	
 	std::cout << std::endl;
 
-	//bt.showPrefix();
+	bt.showPrefix();
 	bt.showInfix();
-	//bt.showPostfix();
+	bt.showPostfix();
 	return 0;
 }
