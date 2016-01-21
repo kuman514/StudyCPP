@@ -9,25 +9,6 @@ unsigned int twoPower(unsigned int index)
 	return result;
 }
 
-/*
-unsigned int getDepth(unsigned int index)
-{
-	unsigned int result = 0;
-	unsigned int call = twoPower(index);
-	
-	if(index == 1)
-		return 0;
-
-	while(call <= 1)
-	{
-		call /= 2;
-		result++;
-	}
-
-	return result;
-}
-*/
-
 struct Node
 {
 	Node *LChild;
@@ -126,10 +107,12 @@ struct BiTree
 
 			while(i < nowIndex)
 			{
-				std::cout << "Order " << i << ", " << show << " : " << "Index " << show -> index << std::endl;
+				std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
 				
 				if(show -> LChild != nullptr)
 					show = show -> LChild;
+				else if(show -> RChild != nullptr)
+					show = show -> RChild;
 				else if(show == show -> Parent -> RChild)
 				{
 					while(show != show -> Parent -> LChild)
@@ -148,19 +131,83 @@ struct BiTree
 
 					show = show -> RChild;
 				}
-
-				i++;
 			}
 		}
 		
 		void showInfix(void)
 		{
+			Node *show = root;
+			int i = 1;
 			std::cout << "Starting Infix" << std::endl;
+
+			while(i < nowIndex)
+			{
+				if(show -> LChild != nullptr)
+					show = show -> LChild;
+				if(show -> RChild != nullptr)
+					show = show -> RChild;
+				else if(show == show -> Parent -> RChild)
+				{
+					std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
+					while(show != show -> Parent -> LChild)
+					{
+						show = show -> Parent;
+						if(show == root)
+							break;
+					}
+
+					show = show -> Parent -> RChild;
+				}
+				else
+				{
+					while(show -> RChild == nullptr)
+					{
+						show = show -> Parent;
+						std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
+					}
+
+					show = show -> RChild;
+					std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
+				}
+			}
 		}
 		
 		void showPostfix(void)
 		{
+			Node *show = root;
+			int i = 1;
 			std::cout << "Starting Postfix" << std::endl;
+
+			while(i < nowIndex)
+			{
+				if(show -> LChild != nullptr)
+					show = show -> LChild;
+				else if(show -> RChild != nullptr)
+					show = show -> RChild;
+				else if(show == show -> Parent -> RChild)
+				{
+					std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
+					while(show != show -> Parent -> LChild)
+					{
+						show = show -> Parent;
+						std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
+						if(show == root)
+							break;
+					}
+
+					show = show -> Parent -> RChild;
+				}
+				else
+				{
+					while(show -> RChild == nullptr)
+					{
+						std::cout << "Order " << i++ << ", " << show << " : " << "Index " << show -> index << std::endl;
+						show = show -> Parent;
+					}
+
+					show = show -> RChild;
+				}
+			}
 		}
 };
 
@@ -188,8 +235,8 @@ int main(void)
 	
 	std::cout << std::endl;
 
-	bt.showPrefix();
+	//bt.showPrefix();
 	bt.showInfix();
-	bt.showPostfix();
+	//bt.showPostfix();
 	return 0;
 }
