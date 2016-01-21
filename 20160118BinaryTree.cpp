@@ -9,6 +9,25 @@ unsigned int twoPower(unsigned int index)
 	return result;
 }
 
+/*
+unsigned int getDepth(unsigned int index)
+{
+	unsigned int result = 0;
+	unsigned int call = twoPower(index);
+	
+	if(index == 1)
+		return 0;
+
+	while(call <= 1)
+	{
+		call /= 2;
+		result++;
+	}
+
+	return result;
+}
+*/
+
 struct Node
 {
 	Node *LChild;
@@ -25,6 +44,7 @@ struct BiTree
 		Node *root;
 		Node *cur;
 		unsigned int nowIndex;
+
 	public:
 		BiTree(int init = 0) : nowIndex(2)
 		{
@@ -44,10 +64,8 @@ struct BiTree
 			std::cout << "Index : " << root -> index << ", ";
 			std::cout << "Data : " << root -> data << std::endl;
 		}
-		~BiTree()
-		{	
-			// Will be added
-		}
+		~BiTree(){}
+	
 		void insert(int num)
 		{
 			// Create tmp first, then search space for tmp node.
@@ -99,18 +117,50 @@ struct BiTree
 			std::cout << "Parent : " << tmp -> Parent << std::endl;
 			nowIndex++;
 		}
-		void search(unsigned int searchIndex)
+		
+		void showPrefix(void)
 		{
-			Node *search = root;
+			Node *show = root;
+			int i = 1;
+			std::cout << "Starting Prefix" << std::endl;
 
-			// Will be added
-			while(search -> index != searchIndex)
+			while(i < nowIndex)
 			{
+				std::cout << "Order " << i << ", " << show << " : " << "Index " << show -> index << std::endl;
+				
+				if(show -> LChild != nullptr)
+					show = show -> LChild;
+				else if(show == show -> Parent -> RChild)
+				{
+					while(show != show -> Parent -> LChild)
+					{
+						show = show -> Parent;
+						if(show == root)
+							break;
+					}
+
+					show = show -> Parent -> RChild;
+				}
+				else
+				{
+					while(show -> RChild == nullptr)
+						show = show -> Parent;
+
+					show = show -> RChild;
+				}
+
+				i++;
 			}
 		}
-		void show(void)
+		
+		void showInfix(void)
 		{
-			// Will be added
+			std::cout << "Starting Infix" << std::endl;
+		}
+		
+		void showPostfix(void)
+		{
+			std::cout << "Starting Postfix" << std::endl;
 		}
 };
 
@@ -124,9 +174,22 @@ int main(void)
 	bt.insert(4);
 	bt.insert(4);
 	bt.insert(4);
+	bt.insert(3);
+	bt.insert(3);
+	bt.insert(3);
+	bt.insert(3);
 	bt.insert(4);
 	bt.insert(4);
 	bt.insert(4);
 	bt.insert(4);
+	bt.insert(3);
+	bt.insert(3);
+	bt.insert(3);
+	
+	std::cout << std::endl;
+
+	bt.showPrefix();
+	bt.showInfix();
+	bt.showPostfix();
 	return 0;
 }
