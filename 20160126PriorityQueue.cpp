@@ -21,7 +21,7 @@ struct Node
 
 struct PQueue
 {
-	private:
+//	private:
 		Node *root;
 		Node *cur;
 		unsigned int nowIndex;
@@ -50,6 +50,7 @@ struct PQueue
 		void enQueue(int num)
 		{
 			bool keepGoing = 1;
+			int swap;
 			Node *tmp = new Node;
 			tmp -> data = num;
 			tmp -> index = nowIndex;
@@ -107,49 +108,25 @@ struct PQueue
 			// while the leaf tmp is bigger than their parents
 			while(tmp -> data < tmp -> Parent -> data)
 			{
-				Node *Sibling = tmp -> Parent -> RChild;
-				// before tmp exchange
-				if(tmp == tmp -> Parent -> LChild)
+				// before swap
+				swap = tmp -> data;
+				tmp -> data = tmp -> Parent -> data;
+				tmp -> Parent -> data = swap;
+				tmp = tmp -> Parent;
+
+				// after swap
+				if(tmp -> LChild != nullptr && tmp -> data > tmp -> LChild -> data)
 				{
-					Sibling -> Parent = tmp;
-					tmp -> Parent = tmp -> Parent -> Parent;
-
-					if(tmp == tmp -> Parent -> LChild -> LChild)
-					{
-						tmp -> Parent -> LChild -> LChild = tmp -> LChild;
-						tmp -> LChild -> Parent = tmp -> Parent -> LChild;
-						tmp -> Parent -> LChild -> RChild = tmp -> RChild;
-						tmp -> RChild -> Parent = tmp -> Parent -> LChild;
-
-						tmp -> RChild = Sibling;
-						tmp -> LChild = tmp -> Parent -> LChild;
-
-						tmp -> Parent -> LChild -> Parent = tmp;
-						tmp -> Parent -> LChild = tmp;
-					}
-					else if(tmp == tmp -> Parent -> RChild -> LChild)
-					{
-						tmp -> Parent -> RChild -> LChild = tmp -> LChild;
-						tmp -> LChild -> Parent = tmp -> Parent -> RChild;
-						tmp -> Parent -> RChild -> RChild = tmp -> RChild;
-						tmp -> RChild -> Parent = tmp -> Parent -> RChild;
-
-						tmp -> RChild = Sibling;
-						tmp -> LChild = tmp -> Parent -> RChild;
-
-						tmp -> Parent -> RChild -> Parent = tmp;
-						tmp -> Parent -> RChild = tmp;
-					}
+					swap = tmp -> data;
+					tmp -> data = tmp -> LChild -> data;
+					tmp -> LChild -> data = swap;
 				}
-				else if(tmp == tmp -> Parent -> RChild)
+				else if(tmp -> RChild != nullptr && tmp -> data > tmp -> RChild -> data)
 				{
+					swap = tmp -> data;
+					tmp -> data = tmp -> RChild -> data;
+					tmp -> RChild -> data = swap;
 				}
-
-				// after tmp exchange
-				if(tmp == root -> Parent)
-					root = tmp;
-
-				cur = cur -> Parent;
 			}
 		}
 
@@ -163,9 +140,26 @@ struct PQueue
 		}
 };
 
+void testprint(Node *pr)
+{
+	if(pr == nullptr)
+		return;
+
+	std::cout << pr << ", Index : " << pr -> index << ", Data : " << pr -> data << std::endl;
+
+	testprint(pr -> LChild);
+	testprint(pr -> RChild);
+}
+
 int main(void)
 {
-	PQueue pq(6);
-	pq.enQueue(1);
+	PQueue pq(20);
+
+	for(int i = 20; i >= 10; i--)
+	{
+		pq.enQueue(i);
+	}
+
+	testprint(pq.root);
 	return 0;
 }
